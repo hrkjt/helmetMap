@@ -117,11 +117,13 @@ m.get_root().html.add_child(folium.Element(legend_html))
 folium.LayerControl().add_to(m)
 
 #st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
-st.markdown('<span style="text-align: center; color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関の地図</span>', unsafe_allow_html=True)
-# 同じ行に表示
+# タイトルの中央揃え
+st.markdown('<div style="text-align: center; color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関の地図</div>', unsafe_allow_html=True)
+
+# 同じ行に表示して中央揃え
 st.markdown(
     """
-    <div style="text-align: center; display: flex; align-items: center;">
+    <div style="display: flex; justify-content: center; align-items: center;">
         <span style="color:#9C9E9E; font-size:18px;">クルム</span>
         <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド</span>
         <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド</span>
