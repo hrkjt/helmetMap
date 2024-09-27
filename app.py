@@ -136,3 +136,5 @@ st.markdown(
 
 # 地図を表示
 st_folium(m, use_container_width=True, height=1000, returned_objects=[])
+
+st.markdown('<div style="text-align: right; color:black; font-size:18px;">地図右上のレイヤーを選択すると、ヘルメットの種類を絞ることができます</div>', unsafe_allow_html=True)
