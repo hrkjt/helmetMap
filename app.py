@@ -105,7 +105,6 @@ folium.LayerControl().add_to(m)
 st.write('ヘルメットのメーカーごとに色分けした医療機関の地図')
 
 # 地図を表示
-st_folium(m, width=2000)
+#st_folium(m, width=2000)
+st_folium(m)
 
-with st.form(key='filter_form'):
-  pass
