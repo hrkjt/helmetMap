@@ -1,5 +1,5 @@
-streamlit
-matplotlib
-numpy
+folium
 pandas
-plotly
+requests
+streamlit
+streamlit_folium
