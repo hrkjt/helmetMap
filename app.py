@@ -108,3 +108,4 @@ st.write('ヘルメットのメーカーごとに色分けした医療機関の�
 st_folium(m, width=2000)
 
 with st.form(key='filter_form'):
+  pass
