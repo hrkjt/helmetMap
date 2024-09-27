@@ -1,5 +1,3 @@
-%%writefile app.py
-
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
@@ -8,6 +6,7 @@ import pandas as pd
 import requests
 
 url = 'https://script.google.com/macros/s/AKfycbzE-Sv2FjBHUU1n-fK5IRW8mG0Jhokimh_pQeJWx8RqobSbWJM9ChSsibF0SIrbzl_Z/exec'
+#url = st.secrets["API_URL"]
 
 response = requests.get(url)
 data = response.json()
