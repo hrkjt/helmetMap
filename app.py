@@ -84,11 +84,11 @@ for index, row in df.iterrows():
 # カスタムHTMLを使用して凡例を追加
 legend_html = '''
 <div style="position: fixed;
-            bottom: 50px; left: 1400px; width: 200px; height: 180px;
+            bottom: 50px; left: 375px; width: 200px; height: 180px;
             border:2px solid grey; z-index:9999; font-size:14px;
             background-color:white; opacity: 0.8;
             padding: 10px;">
-&emsp;<b>Legend</b><br>
+&emsp;<b>ヘルメットの種類</b><br>
 &emsp;<i class="fa fa-map-marker fa-2x" style="color:#9C9E9E"></i>&emsp;クルム<br>
 &emsp;<i class="fa fa-map-marker fa-2x" style="color:#FF8CE8"></i>&emsp;ベビーバンド<br>
 &emsp;<i class="fa fa-map-marker fa-2x" style="color:#F49630"></i>&emsp;スターバンド<br>
@@ -102,9 +102,9 @@ m.get_root().html.add_child(folium.Element(legend_html))
 # レイヤーコントロールを地図に追加
 folium.LayerControl().add_to(m)
 
-st.write('ヘルメットのメーカーごとに色分けした医療機関の地図')
+st.write('ヘルメットの種類ごとに色分けした医療機関の地図')
 
 # 地図を表示
-#st_folium(m, width=2000)
-st_folium(m)
+st_folium(m, width=725)
+
 
