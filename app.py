@@ -51,7 +51,7 @@ def get_marker_color(name):
         #return 'ADD8E6'
 
 # 地図をキャッシュする
-@st.experimental_memo
+@st.cache_resource
 def create_map():
   # 地図の初期設定（初期表示位置を東京に設定）
   m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
