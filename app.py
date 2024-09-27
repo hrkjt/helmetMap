@@ -117,12 +117,20 @@ m.get_root().html.add_child(folium.Element(legend_html))
 folium.LayerControl().add_to(m)
 
 #st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
-st.markdown('<span style="color:red; font-size:24px;">ヘルメットの種類ごとに色分けされた医療機関の地図</span>', unsafe_allow_html=True)
-st.markdown('<span style="color:#9C9E9E; font-size:12px;">クルム</span>', unsafe_allow_html=True)
-st.markdown('<span style="color:#FF8CE8; font-size:12px;">ベビーバンド</span>', unsafe_allow_html=True)
-st.markdown('<span style="color:#F49630; font-size:12px;">スターバンド</span>', unsafe_allow_html=True)
-st.markdown('<span style="color:#FFC88D; font-size:12px;">リモベビー</span>', unsafe_allow_html=True)
-st.markdown('<span style="color:#lightblue; font-size:12px;">プロモメット</span>', unsafe_allow_html=True)
+st.markdown('<span style="color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関の地図</span>', unsafe_allow_html=True)
+# 同じ行に表示
+st.markdown(
+    """
+    <div style="display: flex; align-items: center;">
+        <span style="color:#9C9E9E; font-size:18px;">クルム</span>
+        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド</span>
+        <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド</span>
+        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー</span>
+        <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # 地図を表示
 st_folium(m, use_container_width=True, height=1000, returned_objects=[])
