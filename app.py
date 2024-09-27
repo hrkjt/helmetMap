@@ -5,7 +5,7 @@ from streamlit_folium import st_folium
 import pandas as pd
 import requests
 
-#url = st.secrets["API_URL"]
+url = st.secrets["API_URL"]
 
 response = requests.get(url)
 data = response.json()
@@ -106,3 +106,5 @@ st.write('ヘルメットのメーカーごとに色分けした医療機関の�
 
 # 地図を表示
 st_folium(m, width=2000)
+
+with st.form(key='filter_form'):
