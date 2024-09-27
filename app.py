@@ -5,7 +5,6 @@ from streamlit_folium import st_folium
 import pandas as pd
 import requests
 
-url = 'https://script.google.com/macros/s/AKfycbzE-Sv2FjBHUU1n-fK5IRW8mG0Jhokimh_pQeJWx8RqobSbWJM9ChSsibF0SIrbzl_Z/exec'
 #url = st.secrets["API_URL"]
 
 response = requests.get(url)
@@ -103,5 +102,7 @@ m.get_root().html.add_child(folium.Element(legend_html))
 # レイヤーコントロールを地図に追加
 folium.LayerControl().add_to(m)
 
+st.write('ヘルメットのメーカーごとに色分けした医療機関の地図')
+
 # 地図を表示
-st_folium(m, width=1000)
+st_folium(m, width=2000)
