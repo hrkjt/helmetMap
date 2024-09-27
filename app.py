@@ -32,6 +32,12 @@ for helmet in helmets:
   df_temp['ヘルメット'] = helmet
   df = pd.concat([df, df_temp])
 
+st.set_page_config(
+    page_title="使用ヘルメット別の医療機関の地図",
+    page_icon="👶",
+    layout="wide"
+)
+
 # 地図の初期設定（初期表示位置を東京に設定）
 m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
 
