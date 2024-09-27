@@ -116,7 +116,13 @@ m.get_root().html.add_child(folium.Element(legend_html))
 # レイヤーコントロールを地図に追加
 folium.LayerControl().add_to(m)
 
-st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
+#st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
+st.markdown('<span style="color:red; font-size:24px;">ヘルメットの種類ごとに色分けされた医療機関の地図</span>', unsafe_allow_html=True)
+st.markdown('<span style="color:#9C9E9E; font-size:12px;">クルム</span>', unsafe_allow_html=True)
+st.markdown('<span style="color:#FF8CE8; font-size:12px;">ベビーバンド</span>', unsafe_allow_html=True)
+st.markdown('<span style="color:#F49630; font-size:12px;">スターバンド</span>', unsafe_allow_html=True)
+st.markdown('<span style="color:#FFC88D; font-size:12px;">リモベビー</span>', unsafe_allow_html=True)
+st.markdown('<span style="color:#lightblue; font-size:12px;">プロモメット</span>', unsafe_allow_html=True)
 
 # 地図を表示
 st_folium(m, use_container_width=True, height=1000, returned_objects=[])
