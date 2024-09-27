@@ -61,7 +61,8 @@ for index, row in df.iterrows():
       """
     #iframe = folium.IFrame(popup_content, width=200, height=100)
     #popup = folium.Popup(iframe, max_width=2000)
-    popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
+    #popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
+    popup = folium.Popup(popup_content, max_width=725)  # max_width=200
 
     marker = folium.Marker(
         location=[row['緯度'], row['経度']],
