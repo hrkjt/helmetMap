@@ -23,7 +23,7 @@ url = st.secrets["API_URL"]
 response = requests.get(url)
 data = fetch_data(url)  # キャッシュされたデータを使用
 
-helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整', 'クルム', 'リモベビー', 'プロモメット']
+helmets = ['ベビーバンド', 'スターバンド', 'クルム', 'リモベビー', 'プロモメット']
 
 df = pd.DataFrame()
 
@@ -72,10 +72,17 @@ fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
 
 # データフレームの各行を地図にプロット
 for index, row in df.iterrows():
-    popup_content = f"""
-      <b>医療機関名:</b> {row['医療機関名']}<br>
-      <b>ヘルメット:</b> {row['ヘルメット']}<br>
-      """
+    if row['ヘルメット'] == 'スターバンド調整':
+      popup_content = f"""
+        <b>施設名:</b> {row['医療機関名']}<br>
+        {row['ヘルメット']}<br>
+        """
+    else:
+      popup_content = f"""
+        <b>医療機関名:</b> {row['医療機関名']}<br>
+        <b>ヘルメット:</b> {row['ヘルメット']}<br>
+        """
+
     #iframe = folium.IFrame(popup_content, width=200, height=100)
     #popup = folium.Popup(iframe, max_width=2000)
     popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
