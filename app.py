@@ -158,5 +158,8 @@ st.markdown('<div style="text-align: right; color:black; font-size:18px;">地図
 
 st.markdown('<div style="color:black; font-size:18px;">情報ソース</div>', unsafe_allow_html=True)
 st.markdown('<a href="https://japanmedicalcompany.co.jp/qurum/">クルム</a>', unsafe_allow_html=True)
-
+st.markdown('<a href="https://www.babyband.jp/clinics">ベビーバンド</a>', unsafe_allow_html=True)
+st.markdown('<a href="https://www.ahsjapan.com/facility/medical-institution/">スターバンド</a>', unsafe_allow_html=True)
+st.markdown('<a href="https://remobaby.com/institution">リモベビー</a>', unsafe_allow_html=True)
+st.markdown('<a href="https://yamaguchi-hosougu.co.jp/promomet/">プロモメット</a>', unsafe_allow_html=True)
 
