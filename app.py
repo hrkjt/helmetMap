@@ -120,7 +120,7 @@ st.markdown('<div style="text-align: center; color:black; font-size:24px; font-w
 
 # 同じ行に表示して中央揃え
 st.markdown(
-    """
+    f"""
     <div style="display: flex; justify-content: center; align-items: center;">
         <span style="color:#9C9E9E; font-size:18px;">クルム {count['クルム']} 施設　</span>
         <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
