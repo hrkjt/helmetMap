@@ -35,7 +35,7 @@ for helmet in helmets:
   if '削除日' in df_temp.columns:
     df_temp = df_temp[df_temp['削除日']== '']
   df_temp = df_temp[df_temp['医療機関名'] != '']
-  df_temp = df_temp[['医療機関名', '住所', '緯度', '経度']]
+  df_temp = df_temp[['医療機関名', '住所', '緯度', '経度', 'URL']]
   df_temp = df_temp.dropna()
   count[helmet] = str(len(df_temp))
   df_temp['ヘルメット'] = helmet
@@ -87,6 +87,8 @@ for index, row in df.iterrows():
         <b>ヘルメット:</b> {row['ヘルメット']}<br>
         {row['住所']}<br>
         """
+    if row['URL'] != '':
+        popup_content += f"{row['URL']}<br>"
 
     #iframe = folium.IFrame(popup_content, width=200, height=100)
     #popup = folium.Popup(iframe, max_width=2000)
