@@ -27,6 +27,8 @@ helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整
 
 df = pd.DataFrame()
 
+count = {}
+
 for helmet in helmets:
   df_temp = pd.DataFrame(data[helmet])
   #print(df_temp.columns)
@@ -35,6 +37,7 @@ for helmet in helmets:
   df_temp = df_temp[df_temp['医療機関名'] != '']
   df_temp = df_temp[['医療機関名', '住所', '緯度', '経度']]
   df_temp = df_temp.dropna()
+  count[helmet] = str(len(df_temp))
   df_temp['ヘルメット'] = helmet
   df = pd.concat([df, df_temp])
 
@@ -119,12 +122,12 @@ st.markdown('<div style="text-align: center; color:black; font-size:24px; font-w
 st.markdown(
     """
     <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:#9C9E9E; font-size:18px;">クルム　</span>
-        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド　</span>
-        <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド</span>
-        <span style="color:red; font-size:18px; margin-left: 10px;">（調整）　</span>
-        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー　</span>
-        <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット</span>
+        <span style="color:#9C9E9E; font-size:18px;">クルム {count['クルム']} 施設　</span>
+        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
+        <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド {count['スターバンド']} 施設</span>
+        <span style="color:red; font-size:18px; margin-left: 10px;">（調整 {count['スターバンド調整']} 施設）　</span>
+        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー {count['リモベビー']} 施設　</span>
+        <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット {count['プロモメット']} 施設</span>
     </div>
     """,
     unsafe_allow_html=True
