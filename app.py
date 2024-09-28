@@ -140,7 +140,7 @@ st.markdown('<div style="text-align: center; color:black; font-size:24px; font-w
 st.markdown(
     f"""
     <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:#9C9E9E; font-size:18px;">クルム {count['クルムフィット']} 施設　</span>
+        <span style="color:#9C9E9E; font-size:18px;">クルムフィット {count['クルムフィット']} 施設　</span>
         <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
         <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド {count['スターバンド']} 施設</span>
         <span style="color:red; font-size:18px; margin-left: 10px;">（調整 {count['スターバンド調整']} 施設）　</span>
