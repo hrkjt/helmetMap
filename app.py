@@ -76,11 +76,13 @@ for index, row in df.iterrows():
       popup_content = f"""
         <b>施設名:</b> {row['医療機関名']}<br>
         {row['ヘルメット']}<br>
+        {row['住所']}<br>
         """
     else:
       popup_content = f"""
         <b>医療機関名:</b> {row['医療機関名']}<br>
         <b>ヘルメット:</b> {row['ヘルメット']}<br>
+        {row['住所']}<br>
         """
 
     #iframe = folium.IFrame(popup_content, width=200, height=100)
