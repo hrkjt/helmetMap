@@ -52,6 +52,9 @@ def get_marker_color(name):
     elif name == 'スターバンド':
         return 'orange'
         #return 'FFA500'
+    elif name == 'スターバンド調整':
+        return 'red'
+        #return 'FFA500'
     elif name == 'リモベビー':
         return 'beige'
         #return 'F5F5DC'
@@ -63,6 +66,7 @@ def get_marker_color(name):
 fg_q = folium.FeatureGroup(name='クルム').add_to(m)
 fg_bb = folium.FeatureGroup(name='ベビーバンド').add_to(m)
 fg_sb = folium.FeatureGroup(name='スターバンド').add_to(m)
+fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
 fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
 fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
 
@@ -74,8 +78,7 @@ for index, row in df.iterrows():
       """
     #iframe = folium.IFrame(popup_content, width=200, height=100)
     #popup = folium.Popup(iframe, max_width=2000)
-    #popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
-    popup = folium.Popup(popup_content, max_width=725)  # max_width=200
+    popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
 
     marker = folium.Marker(
         location=[row['緯度'], row['経度']],
@@ -89,29 +92,12 @@ for index, row in df.iterrows():
       marker.add_to(fg_bb)
     if row['ヘルメット'] == 'スターバンド':
       marker.add_to(fg_sb)
+    if row['ヘルメット'] == 'スターバンド調整':
+      marker.add_to(fg_sba)
     if row['ヘルメット'] == 'リモベビー':
       marker.add_to(fg_rb)
     if row['ヘルメット'] == 'プロモメット':
       marker.add_to(fg_pm)
-
-
-# カスタムHTMLを使用して凡例を追加
-legend_html = '''
-<div style="position: fixed;
-            bottom: 50px; left: 375px; width: 200px; height: 180px;
-            border:2px solid grey; z-index:9999; font-size:14px;
-            background-color:white; opacity: 0.8;
-            padding: 10px;">
-&emsp;<b>ヘルメットの種類</b><br>
-&emsp;<i class="fa fa-map-marker fa-2x" style="color:#9C9E9E"></i>&emsp;クルム<br>
-&emsp;<i class="fa fa-map-marker fa-2x" style="color:#FF8CE8"></i>&emsp;ベビーバンド<br>
-&emsp;<i class="fa fa-map-marker fa-2x" style="color:#F49630"></i>&emsp;スターバンド<br>
-&emsp;<i class="fa fa-map-marker fa-2x" style="color:#FFC88D"></i>&emsp;リモベビー<br>
-&emsp;<i class="fa fa-map-marker fa-2x" style="color:lightblue"></i>&emsp;プロモメット<br>
-</div>
-'''
-
-m.get_root().html.add_child(folium.Element(legend_html))
 
 # レイヤーコントロールを地図に追加
 folium.LayerControl().add_to(m)
