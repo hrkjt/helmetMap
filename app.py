@@ -85,7 +85,7 @@ for index, row in df.iterrows():
             """
         else:
           popup_content = f"""
-            <b>施設名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
+            <b>医療機関名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
             <b>ヘルメット:</b> {row['ヘルメット']}<br>
             {row['住所']}<br>
             """
