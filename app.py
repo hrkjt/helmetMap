@@ -23,7 +23,7 @@ url = st.secrets["API_URL"]
 response = requests.get(url)
 data = fetch_data(url)  # キャッシュされたデータを使用
 
-helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整', 'クルム', 'リモベビー', 'プロモメット']
+helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整', 'クルムフィット', 'リモベビー', 'プロモメット']
 
 df = pd.DataFrame()
 
@@ -46,7 +46,7 @@ m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
 
 # 色を指定する関数
 def get_marker_color(name):
-    if name == 'クルム':
+    if name == 'クルムフィット':
         return 'lightgray'
         #return '#D3D3D3'
     elif name == 'ベビーバンド':
@@ -66,7 +66,7 @@ def get_marker_color(name):
         #return 'ADD8E6'
 
 # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
-fg_q = folium.FeatureGroup(name='クルム').add_to(m)
+fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
 fg_bb = folium.FeatureGroup(name='ベビーバンド').add_to(m)
 fg_sb = folium.FeatureGroup(name='スターバンド').add_to(m)
 fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
@@ -116,7 +116,7 @@ for index, row in df.iterrows():
         icon=folium.Icon(color=get_marker_color(row['ヘルメット']))
     )
 
-    if row['ヘルメット'] == 'クルム':
+    if row['ヘルメット'] == 'クルムフィット':
       marker.add_to(fg_q)
     if row['ヘルメット'] == 'ベビーバンド':
       marker.add_to(fg_bb)
@@ -140,7 +140,7 @@ st.markdown('<div style="text-align: center; color:black; font-size:24px; font-w
 st.markdown(
     f"""
     <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:#9C9E9E; font-size:18px;">クルム {count['クルム']} 施設　</span>
+        <span style="color:#9C9E9E; font-size:18px;">クルム {count['クルムフィット']} 施設　</span>
         <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
         <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド {count['スターバンド']} 施設</span>
         <span style="color:red; font-size:18px; margin-left: 10px;">（調整 {count['スターバンド調整']} 施設）　</span>
@@ -157,7 +157,7 @@ st_folium(m, use_container_width=True, height=1000, returned_objects=[])
 st.markdown('<div style="text-align: right; color:black; font-size:18px;">地図右上のレイヤーを選択すると、ヘルメットの種類を絞ることができます</div>', unsafe_allow_html=True)
 
 st.markdown('<div style="color:black; font-size:18px;">情報ソース</div>', unsafe_allow_html=True)
-st.markdown('<a href="https://japanmedicalcompany.co.jp/qurum/">クルム</a>', unsafe_allow_html=True)
+st.markdown('<a href="https://babyhelmet.jp/clinics/">クルムフィット</a>', unsafe_allow_html=True)
 st.markdown('<a href="https://www.babyband.jp/clinics">ベビーバンド</a>', unsafe_allow_html=True)
 st.markdown('<a href="https://www.ahsjapan.com/facility/medical-institution/">スターバンド</a>', unsafe_allow_html=True)
 st.markdown('<a href="https://remobaby.com/institution">リモベビー</a>', unsafe_allow_html=True)
