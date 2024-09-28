@@ -23,7 +23,7 @@ url = st.secrets["API_URL"]
 response = requests.get(url)
 data = fetch_data(url)  # キャッシュされたデータを使用
 
-helmets = ['ベビーバンド', 'スターバンド', 'クルム', 'リモベビー', 'プロモメット']
+helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整', 'クルム', 'リモベビー', 'プロモメット']
 
 df = pd.DataFrame()
 
