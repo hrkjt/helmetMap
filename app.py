@@ -117,10 +117,11 @@ st.markdown('<div style="text-align: center; color:black; font-size:24px; font-w
 st.markdown(
     """
     <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:#9C9E9E; font-size:18px;">クルム</span>
-        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド</span>
+        <span style="color:#9C9E9E; font-size:18px;">クルム　</span>
+        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド　</span>
         <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド</span>
-        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー</span>
+        <span style="color:red; font-size:18px; margin-left: 10px;">（調整）　</span>
+        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー　</span>
         <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット</span>
     </div>
     """,
