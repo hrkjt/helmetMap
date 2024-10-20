@@ -8,7 +8,7 @@ import pandas as pd
 import requests
 
 st.set_page_config(
-    page_title="使用ヘルメット別の医療機関の地図",
+    page_title="使用ヘルメット別の医療機関等の地図",
     page_icon="👶",
     layout="wide"
 )
