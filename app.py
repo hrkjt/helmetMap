@@ -81,7 +81,7 @@ fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
 fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
 fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
 fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
-fg_ib = folium.FeatureGroup(name='GIO Helmet').add_to(m)
+fg_ib = folium.FeatureGroup(name='INNOBAND').add_to(m)
 
 # データフレームの各行を地図にプロット
 for index, row in df.iterrows():
