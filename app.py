@@ -144,7 +144,7 @@ folium.LayerControl().add_to(m)
 
 #st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
 # タイトルの中央揃え
-st.markdown('<div style="text-align: center; color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関の地図</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align: center; color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関等の地図</div>', unsafe_allow_html=True)
 
 # 同じ行に表示して中央揃え
 st.markdown(
