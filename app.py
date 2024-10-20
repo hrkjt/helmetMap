@@ -45,6 +45,7 @@ for helmet in helmets:
 m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
 
 # 色を指定する関数
+#[‘red’, ‘blue’, ‘green’, ‘purple’, ‘orange’, ‘darkred’, ’lightred’, ‘beige’, ‘darkblue’, ‘darkgreen’, ‘cadetblue’, ‘darkpurple’, ‘white’, ‘pink’, ‘lightblue’, ‘lightgreen’, ‘gray’, ‘black’, ‘lightgray’]
 def get_marker_color(name):
     if name == 'クルムフィット':
         return 'lightgray'
@@ -67,8 +68,7 @@ def get_marker_color(name):
     elif name == 'HANI Helmet':
         return 'blue'
     else:  #GIO Helmet
-        #return 'navy'
-        return '#1f2f54'
+        return 'darkblue'
 
 # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
 fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
@@ -158,7 +158,7 @@ st.markdown(
         <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー {count['リモベビー']} 施設　</span>
         <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット {count['プロモメット']} 施設</span>
         <span style="color:blue; font-size:18px; margin-left: 10px;">HANI Helmet {count['HANI Helmet']} 施設</span>
-        <span style="color:#1f2f54; font-size:18px; margin-left: 10px;">GIO Helmet {count['GIO Helmet']} 施設</span>
+        <span style="color:darkblue; font-size:18px; margin-left: 10px;">GIO Helmet {count['GIO Helmet']} 施設</span>
     </div>
     """,
     unsafe_allow_html=True
