@@ -23,7 +23,7 @@ url = st.secrets["API_URL"]
 response = requests.get(url)
 data = fetch_data(url)  # キャッシュされたデータを使用
 
-helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整', 'クルムフィット', 'リモベビー', 'プロモメット', 'HANI Helmet']
+helmets = ['ベビーバンド', 'スターバンド', 'スターバンド調整', 'クルムフィット', 'リモベビー', 'プロモメット', 'HANI Helmet', 'GIO Helmet']
 
 df = pd.DataFrame()
 
@@ -64,8 +64,10 @@ def get_marker_color(name):
     elif name == 'プロモメット':
         return 'lightblue'
         #return 'ADD8E6'
-    else:  #HANI Helmet
+    elif name == 'HANI Helmet':
         return 'blue'
+    else:  #GIO Helmet
+        return 'navy'
 
 # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
 fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
@@ -75,12 +77,13 @@ fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
 fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
 fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
 fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
+fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
 
 # データフレームの各行を地図にプロット
 for index, row in df.iterrows():
     #<a href="https://www.ncchd.go.jp/" target="_blank" rel="noreferrer noopener">国立研究開発法人 国立成育医療研究ｾﾝﾀｰ</a>
     if row['URL'] != '':
-        if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet']:
+        if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet']:
           popup_content = f"""
             <b>施設名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
             {row['ヘルメット']}<br>
@@ -93,7 +96,7 @@ for index, row in df.iterrows():
             {row['住所']}<br>
             """
     else:
-        if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet']:
+        if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet']:
           popup_content = f"""
             <b>施設名:</b> {row['医療機関名']}<br>
             {row['ヘルメット']}<br>
@@ -133,6 +136,8 @@ for index, row in df.iterrows():
       marker.add_to(fg_pm)
     if row['ヘルメット'] == 'HANI Helmet':
       marker.add_to(fg_hh)
+    if row['ヘルメット'] == 'GIO Helmet':
+      marker.add_to(fg_gh)
 
 # レイヤーコントロールを地図に追加
 folium.LayerControl().add_to(m)
@@ -152,6 +157,7 @@ st.markdown(
         <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー {count['リモベビー']} 施設　</span>
         <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット {count['プロモメット']} 施設</span>
         <span style="color:blue; font-size:18px; margin-left: 10px;">HANI Helmet {count['HANI Helmet']} 施設</span>
+        <span style="color:navy; font-size:18px; margin-left: 10px;">GIO Helmet {count['GIO Helmet']} 施設</span>
     </div>
     """,
     unsafe_allow_html=True
@@ -169,4 +175,5 @@ st.markdown('<a href="https://www.ahsjapan.com/facility/medical-institution/">�
 st.markdown('<a href="https://remobaby.com/institution">リモベビー</a>', unsafe_allow_html=True)
 st.markdown('<a href="https://yamaguchi-hosougu.co.jp/promomet/">プロモメット</a>', unsafe_allow_html=True)
 st.markdown('<a href="https://hanihelmet.com/en/?page_id=2031">HANI Helmet</a>', unsafe_allow_html=True)
+st.markdown('<a href="http://giohelmet.com/">GIO Helmet</a>', unsafe_allow_html=True)
 
