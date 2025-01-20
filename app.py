@@ -16,6 +16,8 @@ st.set_page_config(
 @st.cache_data
 def fetch_data(url):
     response = requests.get(url)
+    print("Response status code:", response.status_code)
+    print("Response text:", response.text)
     return response.json()
     
 url = st.secrets["API_URL"]
