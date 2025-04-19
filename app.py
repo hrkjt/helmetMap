@@ -32,6 +32,7 @@ df = pd.DataFrame()
 count = {}
 
 for helmet in helmets:
+  print(helmet)
   df_temp = pd.DataFrame(data[helmet])
   print(df_temp.columns)
   if '削除日' in df_temp.columns:
