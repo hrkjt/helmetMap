@@ -317,11 +317,19 @@ area_chart = (
     .mark_area()
     .encode(
         x=alt.X('年月:T', title='年月'),
-        y=alt.Y('累積施設数:Q', title='累積の医療機関数', stack='zero'),
+        y=alt.Y(
+            '累積施設数:Q',
+            title='累積の医療機関数',
+            stack=alt.StackOffset('zero', order=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'])
+        ),
         color=alt.Color(
             'ヘルメット:N',
             title='ヘルメット',
-            sort=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド']  # ★ここで順番指定
+            sort=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],  # ★ここで順番指定
+            scale=alt.Scale(
+                domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
+                range=['#003f9e', '#8fc9ff', '#ff3d3d', '#ffb3c8']
+            )
         ),
         tooltip=[
             alt.Tooltip('ヘルメット:N', title='ヘルメット'),
