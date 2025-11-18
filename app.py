@@ -332,8 +332,8 @@ df_area['年月_str'] = df_area['年月'].dt.strftime('%Y-%m')
 # スタック順を数値で持たせる
 order_map = {
     'スターバンド': 0,   # 一番下
-    'リモベビー': 1,
-    'クルムフィット': 2,
+    'リモベビー': 2,
+    'クルムフィット': 1,
     'ベビーバンド': 3  # 一番上
 }
 df_area['helmet_order'] = df_area['ヘルメット'].map(order_map)
