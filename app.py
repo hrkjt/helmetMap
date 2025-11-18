@@ -308,13 +308,13 @@ if '年-月' in df.columns:
             )
         )
         
-        st.markdown(
-            '<div style="text-align: center; color:black; font-size:22px; font-weight: bold; margin-top: 30px;">'
-            'ベビーバンド / スターバンド / クルムフィット / リモベビー の医療機関数の推移'
-            '</div>',
-            unsafe_allow_html=True
-        )
-        st.altair_chart(chart, use_container_width=True)
+        # st.markdown(
+        #     '<div style="text-align: center; color:black; font-size:22px; font-weight: bold; margin-top: 30px;">'
+        #     'ベビーバンド / スターバンド / クルムフィット / リモベビー の医療機関数の推移'
+        #     '</div>',
+        #     unsafe_allow_html=True
+        # )
+        # st.altair_chart(chart, use_container_width=True)
     else:
         st.warning('2024-06以降の「年-月」データがありませんでした。')
 else:
