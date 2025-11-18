@@ -330,6 +330,15 @@ order_map = {
 }
 df_area['helmet_order'] = df_area['ヘルメット'].map(order_map)
 
+# ★ 境界線用の「下からの累積」を計算
+df_border = (
+    df_area
+    .sort_values(['年月', 'helmet_order'])
+    .groupby('年月', as_index=False)
+    .apply(lambda g: g.assign(累積境界=g['累積施設数'].cumsum()))
+    .reset_index(drop=True)
+)
+
 # area_chart = (
 #     alt.Chart(df_area)
 #     .mark_area()
@@ -364,23 +373,19 @@ df_area['helmet_order'] = df_area['ヘルメット'].map(order_map)
 #     )
 # )
 
+# 塗りつぶし
 area_layer = (
     alt.Chart(df_area)
     .mark_area()
     .encode(
         x=alt.X('年月:T', title='年月'),
-        y=alt.Y(
-            '累積施設数:Q',
-            title='累積の医療機関数',
-            stack='zero'
-        ),
+        y=alt.Y('累積施設数:Q', title='累積の医療機関数', stack='zero'),
         color=alt.Color(
             'ヘルメット:N',
             title='ヘルメット',
             scale=alt.Scale(
                 domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
-                # range=['#003f9e', '#8fc9ff', '#ff3d3d', '#ffb3c8']
-                range=['#FFA500', '#F5F5DC', '#D3D3D3', '#FFC0CB']
+                range=['#F49630', '#FFF5C7', '#D3D3D3', '#FFC0CB']  # お好みで
             )
         ),
         order=alt.Order('helmet_order:Q', sort='ascending'),
@@ -392,21 +397,20 @@ area_layer = (
     )
 )
 
-# ---------- 境界を描く黒い線 ----------
-line_layer = (
-    alt.Chart(df_area)
+# ★ 境界線（下からの累積を線でなぞる）
+border_layer = (
+    alt.Chart(df_border)
     .mark_line(color='black', strokeWidth=1.2)
     .encode(
         x='年月:T',
-        y='累積施設数:Q',
-        order=alt.Order('helmet_order:Q', sort='ascending'),
-        detail='ヘルメット:N'   # ← ヘルメットごとに別ライン
+        y='累積境界:Q',
+        detail='ヘルメット:N',             # ヘルメットごとに別ライン
+        order=alt.Order('helmet_order:Q', sort='ascending')
     )
 )
 
-# ---------- 合成 ----------
 final_chart = (
-    (area_layer + line_layer)
+    (area_layer + border_layer)
     .properties(
         width=800,
         height=400,
