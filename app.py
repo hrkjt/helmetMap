@@ -41,7 +41,13 @@ for helmet in helmets:
   if '削除日' in df_temp.columns:
     df_temp = df_temp[df_temp['削除日']== '']
   df_temp = df_temp[df_temp['医療機関名'] != '']
-  df_temp = df_temp[['医療機関名', '住所', '緯度', '経度', 'URL', '年-月']]
+  # df_temp = df_temp[['医療機関名', '住所', '緯度', '経度', 'URL']]
+  cols = ['医療機関名', '住所', '緯度', '経度', 'URL']
+  if '年-月' in df_temp.columns:
+    cols.append('年-月')
+
+  df_temp = df_temp[cols]
+    
   df_temp = df_temp.dropna()
   count[helmet] = str(len(df_temp))
   df_temp['ヘルメット'] = helmet
