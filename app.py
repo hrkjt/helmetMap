@@ -312,6 +312,15 @@ else:
 df_area = monthly_new_full.copy()
 df_area['年月_str'] = df_area['年月'].dt.strftime('%Y-%m')
 
+# スタック順を数値で持たせる
+order_map = {
+    'スターバンド': 0,   # 一番下
+    'リモベビー': 1,
+    'クルムフィット': 2,
+    'ベビーバンド': 3  # 一番上
+}
+df_area['helmet_order'] = df_area['ヘルメット'].map(order_map)
+
 area_chart = (
     alt.Chart(df_area)
     .mark_area()
@@ -320,23 +329,19 @@ area_chart = (
         y=alt.Y(
             '累積施設数:Q',
             title='累積の医療機関数',
-            # stack=alt.StackOffset('zero', order=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'])
-            stack='zero'  # ここは文字列 'zero' だけでOK
+            stack='zero'
         ),
         color=alt.Color(
             'ヘルメット:N',
             title='ヘルメット',
-            sort=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],  # ★ここで順番指定
+            # レジェンドと色の順番を固定
             scale=alt.Scale(
                 domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
-                range=['#003f9e', '#8fc9ff', '#ff3d3d', '#ffb3c8']
+                range=['#003f9e', '#8fc9ff', '#ff3d3d', '#ffb3c8']  # お好みで
             )
         ),
-        # ★ これがスタック順を決めるキー
-        order=alt.Order(
-            'ヘルメット:N',
-            sort=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド']
-        ),
+        # ★ スタック順はこの数値で制御
+        order=alt.Order('helmet_order:Q', sort='ascending'),
         tooltip=[
             alt.Tooltip('ヘルメット:N', title='ヘルメット'),
             alt.Tooltip('年月_str:N', title='年月'),
