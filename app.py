@@ -280,7 +280,16 @@ if '年-月' in df.columns:
             .encode(
                 x=alt.X('年月:T', title='年月'),
                 y=alt.Y('累積施設数:Q', title='累積の医療機関数'),
-                color=alt.Color('ヘルメット:N', title='ヘルメット'),
+                # color=alt.Color('ヘルメット:N', title='ヘルメット'),
+                color=alt.Color(
+                    'ヘルメット:N',
+                    title='ヘルメット',
+                    # レジェンドと色の順番を固定
+                    scale=alt.Scale(
+                        domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
+                        range=['#FFA500', '#F5F5DC', '#D3D3D3', '#FFC0CB']  # お好みで
+                    )
+                ),
                 tooltip=[
                     alt.Tooltip('ヘルメット:N', title='ヘルメット'),
                     alt.Tooltip('年月_str:N', title='年月'),
@@ -337,7 +346,7 @@ area_chart = (
             # レジェンドと色の順番を固定
             scale=alt.Scale(
                 domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
-                range=['#003f9e', '#8fc9ff', '#ff3d3d', '#ffb3c8']  # お好みで
+                range=['#FFA500', '#F5F5DC', '#D3D3D3', '#FFC0CB']  # お好みで
             )
         ),
         # ★ スタック順はこの数値で制御
