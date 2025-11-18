@@ -330,7 +330,41 @@ order_map = {
 }
 df_area['helmet_order'] = df_area['ヘルメット'].map(order_map)
 
-area_chart = (
+# area_chart = (
+#     alt.Chart(df_area)
+#     .mark_area()
+#     .encode(
+#         x=alt.X('年月:T', title='年月'),
+#         y=alt.Y(
+#             '累積施設数:Q',
+#             title='累積の医療機関数',
+#             stack='zero'
+#         ),
+#         color=alt.Color(
+#             'ヘルメット:N',
+#             title='ヘルメット',
+#             # レジェンドと色の順番を固定
+#             scale=alt.Scale(
+#                 domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
+#                 range=['#FFA500', '#F5F5DC', '#D3D3D3', '#FFC0CB']  # お好みで
+#             )
+#         ),
+#         # ★ スタック順はこの数値で制御
+#         order=alt.Order('helmet_order:Q', sort='ascending'),
+#         tooltip=[
+#             alt.Tooltip('ヘルメット:N', title='ヘルメット'),
+#             alt.Tooltip('年月_str:N', title='年月'),
+#             alt.Tooltip('累積施設数:Q', title='累積施設数')
+#         ]
+#     )
+#     .properties(
+#         width=800,
+#         height=400,
+#         title='ヘルメット別 累積医療機関数（内訳を色分け・指定順でスタック）'
+#     )
+# )
+
+area_layer = (
     alt.Chart(df_area)
     .mark_area()
     .encode(
@@ -343,13 +377,12 @@ area_chart = (
         color=alt.Color(
             'ヘルメット:N',
             title='ヘルメット',
-            # レジェンドと色の順番を固定
             scale=alt.Scale(
                 domain=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド'],
-                range=['#FFA500', '#F5F5DC', '#D3D3D3', '#FFC0CB']  # お好みで
+                # range=['#003f9e', '#8fc9ff', '#ff3d3d', '#ffb3c8']
+                range=['#FFA500', '#F5F5DC', '#D3D3D3', '#FFC0CB']
             )
         ),
-        # ★ スタック順はこの数値で制御
         order=alt.Order('helmet_order:Q', sort='ascending'),
         tooltip=[
             alt.Tooltip('ヘルメット:N', title='ヘルメット'),
@@ -357,10 +390,27 @@ area_chart = (
             alt.Tooltip('累積施設数:Q', title='累積施設数')
         ]
     )
+)
+
+# ---------- 境界を描く黒い線 ----------
+line_layer = (
+    alt.Chart(df_area)
+    .mark_line(color='black', strokeWidth=1.2)
+    .encode(
+        x='年月:T',
+        y='累積施設数:Q',
+        order=alt.Order('helmet_order:Q', sort='ascending'),
+        detail='ヘルメット:N'   # ← ヘルメットごとに別ライン
+    )
+)
+
+# ---------- 合成 ----------
+final_chart = (
+    (area_layer + line_layer)
     .properties(
         width=800,
         height=400,
-        title='ヘルメット別 累積医療機関数（内訳を色分け・指定順でスタック）'
+        title='ヘルメット別 累積医療機関数（内訳 + 境界黒線）'
     )
 )
 
@@ -370,7 +420,8 @@ st.markdown(
     '</div>',
     unsafe_allow_html=True
 )
-st.altair_chart(area_chart, use_container_width=True)
+# st.altair_chart(area_chart, use_container_width=True)
+st.altair_chart(final_chart, use_container_width=True)
 
 
 
