@@ -215,8 +215,8 @@ if '年-月' in df.columns:
     df_chart = df_chart.dropna(subset=['年月'])
     
     # 2024-06以降に限定
-    start_month = pd.Timestamp('2024-06-01')
-    df_chart = df_chart[df_chart['年月'] >= start_month]
+    # start_month = pd.Timestamp('2024-06-01')
+    # df_chart = df_chart[df_chart['年月'] >= start_month]
     
     if not df_chart.empty:
         # 月初日ベースの連続した月のリストを作る
@@ -317,9 +317,12 @@ else:
 # ===== 折れ線グラフ用の処理ここまで =====
 
 # ===== スタックエリアチャート（合計の内訳を色分け） =====
-
-df_area = monthly_new_full.copy()
+# ★ ここで初めて「表示用」に 2024-06 以降を切り出す
+start_month = pd.Timestamp('2024-06-01')
+# df_area = monthly_new_full.copy()
+df_area = monthly_new_full[monthly_new_full['年月'] >= start_month].copy()
 df_area['年月_str'] = df_area['年月'].dt.strftime('%Y-%m')
+
 
 # スタック順を数値で持たせる
 order_map = {
