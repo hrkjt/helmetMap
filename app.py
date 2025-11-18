@@ -317,8 +317,12 @@ area_chart = (
     .mark_area()
     .encode(
         x=alt.X('年月:T', title='年月'),
-        y=alt.Y('累積施設数:Q', title='累積の医療機関数', stack='zero'),  # デフォルトでスタック（合計）
-        color=alt.Color('ヘルメット:N', title='ヘルメット'),
+        y=alt.Y('累積施設数:Q', title='累積の医療機関数', stack='zero'),
+        color=alt.Color(
+            'ヘルメット:N',
+            title='ヘルメット',
+            sort=['スターバンド', 'リモベビー', 'クルムフィット', 'ベビーバンド']  # ★ここで順番指定
+        ),
         tooltip=[
             alt.Tooltip('ヘルメット:N', title='ヘルメット'),
             alt.Tooltip('年月_str:N', title='年月'),
@@ -328,7 +332,7 @@ area_chart = (
     .properties(
         width=800,
         height=400,
-        title='ヘルメット別 累積医療機関数の推移（2024-06以降, 合計の内訳を色分け）'
+        title='ヘルメット別 累積医療機関数（内訳を色分け・指定順でスタック）'
     )
 )
 
