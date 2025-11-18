@@ -7,6 +7,9 @@ from streamlit_folium import st_folium
 import pandas as pd
 import requests
 
+import altair as alt
+import numpy as np
+
 st.set_page_config(
     page_title="使用ヘルメット別の医療機関等の地図",
     page_icon="👶",
@@ -38,11 +41,13 @@ for helmet in helmets:
   if '削除日' in df_temp.columns:
     df_temp = df_temp[df_temp['削除日']== '']
   df_temp = df_temp[df_temp['医療機関名'] != '']
-  df_temp = df_temp[['医療機関名', '住所', '緯度', '経度', 'URL']]
+  df_temp = df_temp[['医療機関名', '住所', '緯度', '経度', 'URL', '年-月']]
   df_temp = df_temp.dropna()
   count[helmet] = str(len(df_temp))
   df_temp['ヘルメット'] = helmet
   df = pd.concat([df, df_temp])
+
+
 
 # 地図の初期設定（初期表示位置を東京に設定）
 m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
@@ -187,6 +192,116 @@ st.markdown(
 st_folium(m, use_container_width=True, height=1000, returned_objects=[])
 
 st.markdown('<div style="text-align: right; color:black; font-size:18px;">地図右上のレイヤーを選択すると、ヘルメットの種類を絞ることができます</div>', unsafe_allow_html=True)
+
+# ===== ここから折れ線グラフ用の処理 =====
+
+target_helmets = ['ベビーバンド', 'スターバンド', 'クルムフィット', 'リモベビー']
+
+# 「年-月」列があるかチェック
+if '年-月' in df.columns:
+    df_chart = df[df['ヘルメット'].isin(target_helmets)].copy()
+    
+    # 念のためダブりを削る（同じ医療機関+ヘルメットが複数行あっても1施設と数える想定）
+    df_chart = df_chart.drop_duplicates(subset=['医療機関名', 'ヘルメット'])
+    
+    # 年月を Timestamp に変換
+    df_chart['年月'] = pd.to_datetime(df_chart['年-月'], format='%Y-%m', errors='coerce')
+    df_chart = df_chart.dropna(subset=['年月'])
+    
+    # 2024-06以降に限定
+    start_month = pd.Timestamp('2024-06-01')
+    df_chart = df_chart[df_chart['年月'] >= start_month]
+    
+    if not df_chart.empty:
+        # 月初日ベースの連続した月のリストを作る
+        end_month = df_chart['年月'].max()
+        month_range = pd.date_range(start=start_month, end=end_month, freq='MS')  # MS = month start
+        
+        # 各ヘルメット×年月ごとの「新規施設数」（その月に新しく出てきた施設数）
+        monthly_new = (
+            df_chart
+            .groupby(['ヘルメット', '年月'])
+            .size()
+            .rename('新規施設数')
+            .reset_index()
+        )
+        
+        # 全てのヘルメット×全ての月を埋めたテーブルにし、欠損は0
+        idx = pd.MultiIndex.from_product(
+            [target_helmets, month_range],
+            names=['ヘルメット', '年月']
+        )
+        monthly_new_full = (
+            monthly_new
+            .set_index(['ヘルメット', '年月'])
+            .reindex(idx, fill_value=0)
+            .reset_index()
+        )
+        
+        # 各ヘルメットごとの累積施設数を計算
+        monthly_new_full['累積施設数'] = (
+            monthly_new_full
+            .groupby('ヘルメット')['新規施設数']
+            .cumsum()
+        )
+        
+        # 合計ライン（4ヘルメット合計の累積施設数）を作成
+        total_by_month = (
+            monthly_new_full
+            .groupby('年月')['累積施設数']
+            .sum()
+            .rename('累積施設数')
+            .reset_index()
+        )
+        total_by_month['ヘルメット'] = '合計'
+        
+        # プロット用に結合
+        df_plot = pd.concat(
+            [
+                monthly_new_full[['ヘルメット', '年月', '累積施設数']],
+                total_by_month[['ヘルメット', '年月', '累積施設数']]
+            ],
+            ignore_index=True
+        )
+        
+        # 年月表示用に文字列（YYYY-MM）を作っておくとツールチップが見やすい
+        df_plot['年月_str'] = df_plot['年月'].dt.strftime('%Y-%m')
+        
+        # Altair で折れ線グラフを作成
+        chart = (
+            alt.Chart(df_plot)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X('年月:T', title='年月'),
+                y=alt.Y('累積施設数:Q', title='累積の医療機関数'),
+                color=alt.Color('ヘルメット:N', title='ヘルメット'),
+                tooltip=[
+                    alt.Tooltip('ヘルメット:N', title='ヘルメット'),
+                    alt.Tooltip('年月_str:N', title='年月'),
+                    alt.Tooltip('累積施設数:Q', title='累積施設数')
+                ]
+            )
+            .properties(
+                width=800,
+                height=400,
+                title='ヘルメット別 医療機関数の推移（2024-06以降, 累積）'
+            )
+        )
+        
+        st.markdown(
+            '<div style="text-align: center; color:black; font-size:22px; font-weight: bold; margin-top: 30px;">'
+            'ベビーバンド / スターバンド / クルムフィット / リモベビー の医療機関数の推移'
+            '</div>',
+            unsafe_allow_html=True
+        )
+        st.altair_chart(chart, use_container_width=True)
+    else:
+        st.warning('2024-06以降の「年-月」データがありませんでした。')
+else:
+    st.warning('APIレスポンスに「年-月」カラムが含まれていません。')
+# ===== 折れ線グラフ用の処理ここまで =====
+
+
 
 st.markdown('<div style="color:black; font-size:18px;">情報ソース</div>', unsafe_allow_html=True)
 st.markdown('<a href="https://babyhelmet.jp/clinics/">クルムフィット</a>', unsafe_allow_html=True)
