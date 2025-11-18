@@ -307,6 +307,40 @@ else:
     st.warning('APIレスポンスに「年-月」カラムが含まれていません。')
 # ===== 折れ線グラフ用の処理ここまで =====
 
+# ===== スタックエリアチャート（合計の内訳を色分け） =====
+
+df_area = monthly_new_full.copy()
+df_area['年月_str'] = df_area['年月'].dt.strftime('%Y-%m')
+
+area_chart = (
+    alt.Chart(df_area)
+    .mark_area()
+    .encode(
+        x=alt.X('年月:T', title='年月'),
+        y=alt.Y('累積施設数:Q', title='累積の医療機関数', stack='zero'),  # デフォルトでスタック（合計）
+        color=alt.Color('ヘルメット:N', title='ヘルメット'),
+        tooltip=[
+            alt.Tooltip('ヘルメット:N', title='ヘルメット'),
+            alt.Tooltip('年月_str:N', title='年月'),
+            alt.Tooltip('累積施設数:Q', title='累積施設数')
+        ]
+    )
+    .properties(
+        width=800,
+        height=400,
+        title='ヘルメット別 累積医療機関数の推移（2024-06以降, 合計の内訳を色分け）'
+    )
+)
+
+st.markdown(
+    '<div style="text-align: center; color:black; font-size:22px; font-weight: bold; margin-top: 30px;">'
+    'ベビーバンド / スターバンド / クルムフィット / リモベビー の累積医療機関数（内訳付き）'
+    '</div>',
+    unsafe_allow_html=True
+)
+st.altair_chart(area_chart, use_container_width=True)
+
+
 
 
 st.markdown('<div style="color:black; font-size:18px;">情報ソース</div>', unsafe_allow_html=True)
