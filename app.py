@@ -220,8 +220,8 @@ if '年-月' in df.columns:
     
     if not df_chart.empty:
         # 月初日ベースの連続した月のリストを作る
-        end_month = df_chart['年月'].max()
-        month_range = pd.date_range(start=start_month, end=end_month, freq='MS')  # MS = month start
+        # end_month = df_chart['年月'].max()
+        # month_range = pd.date_range(start=start_month, end=end_month, freq='MS')  # MS = month start
         
         # 各ヘルメット×年月ごとの「新規施設数」（その月に新しく出てきた施設数）
         monthly_new = (
@@ -231,6 +231,11 @@ if '年-月' in df.columns:
             .rename('新規施設数')
             .reset_index()
         )
+
+        # 月の全範囲（最初〜最後）
+        overall_start = monthly_new['年月'].min()
+        overall_end   = monthly_new['年月'].max()
+        month_range = pd.date_range(start=overall_start, end=overall_end, freq='MS')
         
         # 全てのヘルメット×全ての月を埋めたテーブルにし、欠損は0
         idx = pd.MultiIndex.from_product(
