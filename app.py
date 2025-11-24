@@ -2,6 +2,10 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
+import time
+import io
+import imageio.v2 as imageio  # requirements.txt に imageio を追加しておいてください
+
 import pandas as pd
 import requests
 
@@ -138,12 +142,8 @@ for helmet in helmets:
     count[helmet] = str(len(df_map[df_map['ヘルメット'] == helmet]))
 
 # ==========================================================
-
-# 地図の初期設定（初期表示位置を東京に設定）
-m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
-
-# 色を指定する関数
-#[‘red’, ‘blue’, ‘green’, ‘purple’, ‘orange’, ‘darkred’, ’lightred’, ‘beige’, ‘darkblue’, ‘darkgreen’, ‘cadetblue’, ‘darkpurple’, ‘white’, ‘pink’, ‘lightblue’, ‘lightgreen’, ‘gray’, ‘black’, ‘lightgray’]
+# # 色を指定する関数
+# #[‘red’, ‘blue’, ‘green’, ‘purple’, ‘orange’, ‘darkred’, ’lightred’, ‘beige’, ‘darkblue’, ‘darkgreen’, ‘cadetblue’, ‘darkpurple’, ‘white’, ‘pink’, ‘lightblue’, ‘lightgreen’, ‘gray’, ‘black’, ‘lightgray’]
 def get_marker_color(name):
     if name == 'クルムフィット':
         return 'lightgray'
@@ -170,90 +170,270 @@ def get_marker_color(name):
     else:  #INNOBAND
         return 'darkpurple'
 
-# レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
-fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
-fg_bb = folium.FeatureGroup(name='ベビーバンド').add_to(m)
-fg_sb = folium.FeatureGroup(name='スターバンド').add_to(m)
-fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
-fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
-fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
-fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
-fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
-fg_ib = folium.FeatureGroup(name='INNOBAND').add_to(m)
+# # 地図の初期設定（初期表示位置を東京に設定）
+# m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
 
+# # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
+# fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
+# fg_bb = folium.FeatureGroup(name='ベビーバンド').add_to(m)
+# fg_sb = folium.FeatureGroup(name='スターバンド').add_to(m)
+# fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
+# fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
+# fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
+# fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
+# fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
+# fg_ib = folium.FeatureGroup(name='INNOBAND').add_to(m)
+
+# if df_map.empty:
+#     st.warning("選択された年月の範囲に該当する施設がありません。")
+
+# # データフレームの各行を地図にプロット
+# # for index, row in df.iterrows():
+# for index, row in df_map.iterrows():    
+#     #<a href="https://www.ncchd.go.jp/" target="_blank" rel="noreferrer noopener">国立研究開発法人 国立成育医療研究ｾﾝﾀｰ</a>
+#     if row['URL'] != '':
+#         if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
+#           popup_content = f"""
+#             <b>施設名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
+#             {row['ヘルメット']}<br>
+#             {row['住所']}<br>
+#             """
+#         else:
+#           popup_content = f"""
+#             <b>医療機関名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
+#             <b>ヘルメット:</b> {row['ヘルメット']}<br>
+#             {row['住所']}<br>
+#             """
+#     else:
+#         if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
+#           popup_content = f"""
+#             <b>施設名:</b> {row['医療機関名']}<br>
+#             {row['ヘルメット']}<br>
+#             {row['住所']}<br>
+#             """
+#         else:
+#           popup_content = f"""
+#             <b>医療機関名:</b> {row['医療機関名']}<br>
+#             <b>ヘルメット:</b> {row['ヘルメット']}<br>
+#             {row['住所']}<br>
+#             """        
+            
+#     #if row['URL'] != '':
+#         #popup_content += f"{row['URL']}<br>"
+
+#     #iframe = folium.IFrame(popup_content, width=200, height=100)
+#     #popup = folium.Popup(iframe, max_width=2000)
+#     popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
+
+#     marker = folium.Marker(
+#         location=[row['緯度'], row['経度']],
+#         popup=popup,
+#         icon=folium.Icon(color=get_marker_color(row['ヘルメット']))
+#     )
+
+#     if row['ヘルメット'] == 'クルムフィット':
+#       marker.add_to(fg_q)
+#     if row['ヘルメット'] == 'ベビーバンド':
+#       marker.add_to(fg_bb)
+#     if row['ヘルメット'] == 'スターバンド':
+#       marker.add_to(fg_sb)
+#     if row['ヘルメット'] == 'スターバンド調整':
+#       marker.add_to(fg_sba)
+#     if row['ヘルメット'] == 'リモベビー':
+#       marker.add_to(fg_rb)
+#     if row['ヘルメット'] == 'プロモメット':
+#       marker.add_to(fg_pm)
+#     if row['ヘルメット'] == 'HANI Helmet':
+#       marker.add_to(fg_hh)
+#     if row['ヘルメット'] == 'GIO Helmet':
+#       marker.add_to(fg_gh)
+#     if row['ヘルメット'] == 'INNOBAND':
+#       marker.add_to(fg_ib)
+
+# # レイヤーコントロールを地図に追加
+# folium.LayerControl().add_to(m)
+
+# # 地図を表示
+# st_folium(m, use_container_width=True, height=1000, returned_objects=[])
+
+# st.markdown('<div style="text-align: right; color:black; font-size:18px;">地図右上のレイヤーを選択すると、ヘルメットの種類を絞ることができます</div>', unsafe_allow_html=True)
+
+# ================== 地図描画関数 ==================
+def build_map(df_map: pd.DataFrame) -> folium.Map:
+    # 地図の初期設定（初期表示位置を東京に設定）
+    m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
+
+    # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
+    fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
+    fg_bb = folium.FeatureGroup(name='ベビーバンド').add_to(m)
+    fg_sb = folium.FeatureGroup(name='スターバンド').add_to(m)
+    fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
+    fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
+    fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
+    fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
+    fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
+    fg_ib = folium.FeatureGroup(name='INNOBAND').add_to(m)
+
+    # データフレームの各行を地図にプロット
+    for _, row in df_map.iterrows():
+        if row['URL'] != '':
+            if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
+                popup_content = f"""
+                    <b>施設名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
+                    {row['ヘルメット']}<br>
+                    {row['住所']}<br>
+                """
+            else:
+                popup_content = f"""
+                    <b>医療機関名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
+                    <b>ヘルメット:</b> {row['ヘルメット']}<br>
+                    {row['住所']}<br>
+                """
+        else:
+            if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
+                popup_content = f"""
+                    <b>施設名:</b> {row['医療機関名']}<br>
+                    {row['ヘルメット']}<br>
+                    {row['住所']}<br>
+                """
+            else:
+                popup_content = f"""
+                    <b>医療機関名:</b> {row['医療機関名']}<br>
+                    <b>ヘルメット:</b> {row['ヘルメット']}<br>
+                    {row['住所']}<br>
+                """
+
+        popup = folium.Popup(popup_content, max_width=2000)
+
+        marker = folium.Marker(
+            location=[row['緯度'], row['経度']],
+            popup=popup,
+            icon=folium.Icon(color=get_marker_color(row['ヘルメット']))
+        )
+
+        if row['ヘルメット'] == 'クルムフィット':
+            marker.add_to(fg_q)
+        if row['ヘルメット'] == 'ベビーバンド':
+            marker.add_to(fg_bb)
+        if row['ヘルメット'] == 'スターバンド':
+            marker.add_to(fg_sb)
+        if row['ヘルメット'] == 'スターバンド調整':
+            marker.add_to(fg_sba)
+        if row['ヘルメット'] == 'リモベビー':
+            marker.add_to(fg_rb)
+        if row['ヘルメット'] == 'プロモメット':
+            marker.add_to(fg_pm)
+        if row['ヘルメット'] == 'HANI Helmet':
+            marker.add_to(fg_hh)
+        if row['ヘルメット'] == 'GIO Helmet':
+            marker.add_to(fg_gh)
+        if row['ヘルメット'] == 'INNOBAND':
+            marker.add_to(fg_ib)
+
+    # レイヤーコントロールを地図に追加
+    folium.LayerControl().add_to(m)
+
+    return m
+
+
+# ============== 通常表示用の地図 ==============
 if df_map.empty:
     st.warning("選択された年月の範囲に該当する施設がありません。")
+else:
+    map_placeholder = st.empty()
+    m = build_map(df_map)
+    with map_placeholder:
+        st_folium(m, use_container_width=True, height=1000, returned_objects=[])
 
-# データフレームの各行を地図にプロット
-# for index, row in df.iterrows():
-for index, row in df_map.iterrows():    
-    #<a href="https://www.ncchd.go.jp/" target="_blank" rel="noreferrer noopener">国立研究開発法人 国立成育医療研究ｾﾝﾀｰ</a>
-    if row['URL'] != '':
-        if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
-          popup_content = f"""
-            <b>施設名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
-            {row['ヘルメット']}<br>
-            {row['住所']}<br>
-            """
+st.markdown(
+    '<div style="text-align: right; color:black; font-size:18px;">'
+    '地図右上のレイヤーを選択すると、ヘルメットの種類を絞ることができます'
+    '</div>',
+    unsafe_allow_html=True
+)
+
+# ================== アニメーション・GIF作成 ==================
+# スライダーから得た start_month, end_month, slider_max_ts, slider_min_ts を前のブロックで定義済みと仮定
+
+if '年-月' in df.columns and not df_map.empty:
+
+    st.markdown("### 📽️ end_dt を1ヶ月ずつ増やしたアニメーション")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        play_anim = st.button("▶︎ 画面で再生")
+    with col2:
+        make_gif = st.button("💾 GIF を作成")
+
+    # ユーザーが現在選んでいる start_dt に合わせて、end_dt を月ごとに右へ動かすイメージ
+    start_ts = pd.Timestamp(start_dt)
+    # アニメーションは現在の end_dt 〜 データの最大月 まででも、default_start〜最大まででもOK
+    # ここでは「start_dt〜slider_max_ts」までをコマにします
+    anim_months = pd.date_range(start=start_ts, end=slider_max_ts, freq='MS')
+
+    # 「default_start からの累積表示かどうか」のフラグ
+    use_cumulative_from_default = (slider_min_ts == pd.Timestamp('2024-06-01'))
+
+    def filter_df_for_range(end_ts: pd.Timestamp) -> pd.DataFrame:
+        if use_cumulative_from_default:
+            # 2024-06 からの累積
+            return df[df['年月'] <= end_ts].copy()
         else:
-          popup_content = f"""
-            <b>医療機関名:</b> <a href={row['URL']} target="_blank">{row['医療機関名']}</a><br>
-            <b>ヘルメット:</b> {row['ヘルメット']}<br>
-            {row['住所']}<br>
-            """
-    else:
-        if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
-          popup_content = f"""
-            <b>施設名:</b> {row['医療機関名']}<br>
-            {row['ヘルメット']}<br>
-            {row['住所']}<br>
-            """
+            # スライダー左端 start_ts からの累積
+            return df[(df['年月'] >= start_ts) & (df['年月'] <= end_ts)].copy()
+
+    # --- 画面でのアニメーション再生 ---
+    if play_anim:
+        for i, end_ts in enumerate(anim_months):
+            df_frame = filter_df_for_range(end_ts)
+
+            if df_frame.empty:
+                continue
+
+            # 画面右上に「何年何月まで表示中か」を出す
+            st.markdown(
+                f"<div style='text-align:right; font-size:16px;'>"
+                f"{end_ts.strftime('%Y-%m')} までの施設を表示中（{i+1}/{len(anim_months)}）"
+                f"</div>",
+                unsafe_allow_html=True
+            )
+
+            m_frame = build_map(df_frame)
+            with map_placeholder:
+                st_folium(m_frame, use_container_width=True, height=1000, returned_objects=[])
+
+            time.sleep(0.7)  # コマ送りの間隔（秒）
+
+    # --- GIF 作成＆ダウンロード ---
+    if make_gif:
+        frames = []
+
+        for end_ts in anim_months:
+            df_frame = filter_df_for_range(end_ts)
+            if df_frame.empty:
+                continue
+
+            m_frame = build_map(df_frame)
+
+            # folium Map → PNG バイト列
+            png_bytes = m_frame._to_png(5)  # delay=5秒ぐらい（環境により調整）
+            img = imageio.imread(io.BytesIO(png_bytes))
+            frames.append(img)
+
+        if frames:
+            gif_bytes = io.BytesIO()
+            imageio.mimsave(gif_bytes, frames, format="GIF", duration=0.7)
+            gif_bytes.seek(0)
+
+            st.download_button(
+                "GIF をダウンロード",
+                data=gif_bytes,
+                file_name="helmet_map_animation.gif",
+                mime="image/gif"
+            )
         else:
-          popup_content = f"""
-            <b>医療機関名:</b> {row['医療機関名']}<br>
-            <b>ヘルメット:</b> {row['ヘルメット']}<br>
-            {row['住所']}<br>
-            """        
-            
-    #if row['URL'] != '':
-        #popup_content += f"{row['URL']}<br>"
+            st.warning("GIF 用のフレームを作成できませんでした。")
 
-    #iframe = folium.IFrame(popup_content, width=200, height=100)
-    #popup = folium.Popup(iframe, max_width=2000)
-    popup = folium.Popup(popup_content, max_width=2000)  # max_width=200
-
-    marker = folium.Marker(
-        location=[row['緯度'], row['経度']],
-        popup=popup,
-        icon=folium.Icon(color=get_marker_color(row['ヘルメット']))
-    )
-
-    if row['ヘルメット'] == 'クルムフィット':
-      marker.add_to(fg_q)
-    if row['ヘルメット'] == 'ベビーバンド':
-      marker.add_to(fg_bb)
-    if row['ヘルメット'] == 'スターバンド':
-      marker.add_to(fg_sb)
-    if row['ヘルメット'] == 'スターバンド調整':
-      marker.add_to(fg_sba)
-    if row['ヘルメット'] == 'リモベビー':
-      marker.add_to(fg_rb)
-    if row['ヘルメット'] == 'プロモメット':
-      marker.add_to(fg_pm)
-    if row['ヘルメット'] == 'HANI Helmet':
-      marker.add_to(fg_hh)
-    if row['ヘルメット'] == 'GIO Helmet':
-      marker.add_to(fg_gh)
-    if row['ヘルメット'] == 'INNOBAND':
-      marker.add_to(fg_ib)
-
-# レイヤーコントロールを地図に追加
-folium.LayerControl().add_to(m)
-
-# 地図を表示
-st_folium(m, use_container_width=True, height=1000, returned_objects=[])
-
-st.markdown('<div style="text-align: right; color:black; font-size:18px;">地図右上のレイヤーを選択すると、ヘルメットの種類を絞ることができます</div>', unsafe_allow_html=True)
 
 # ===== ここから折れ線グラフ用の処理 =====
 
