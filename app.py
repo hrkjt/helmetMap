@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
@@ -9,6 +7,9 @@ import requests
 
 import altair as alt
 import numpy as np
+
+import datetime
+
 
 st.set_page_config(
     page_title="使用ヘルメット別の医療機関等の地図",
@@ -53,7 +54,46 @@ for helmet in helmets:
   df_temp['ヘルメット'] = helmet
   df = pd.concat([df, df_temp])
 
+# 「年-月」列がある場合は datetime に変換してスライダーで絞り込み
+if '年-月' in df.columns:
+    # 文字列 "YYYY-MM" → Timestamp（その月の1日）
+    df['年月'] = pd.to_datetime(df['年-月'], format='%Y-%m', errors='coerce')
 
+    # 下限は 2024-06-01、上限は「現在の月初」かデータ最大のどちらか小さい方
+    default_start = pd.Timestamp('2024-06-01')
+
+    today = datetime.date.today()
+    current_month = pd.Timestamp(today.replace(day=1))
+
+    data_min = df['年月'].min()
+    data_max = df['年月'].max()
+
+    # スライダーの範囲
+    slider_min = max(default_start, data_min) if pd.notna(data_min) else default_start
+    slider_max = min(current_month, data_max) if pd.notna(data_max) else current_month
+
+    # 年月の範囲を選ぶスライダー
+    start_month, end_month = st.slider(
+        "表示する年月（年-月）",
+        min_value=slider_min,
+        max_value=slider_max,
+        value=(slider_min, slider_max),
+        format="YYYY-MM"
+    )
+
+    # ★ 地図用の df を年月範囲でフィルタ
+    df_map = df[(df['年月'] >= start_month) & (df['年月'] <= end_month)].copy()
+
+else:
+    # 「年-月」が無い場合は全件表示
+    df_map = df.copy()
+
+# 統計表示用の件数も、フィルタ後の df_map で数え直す
+count = {}
+for helmet in helmets:
+    count[helmet] = str(len(df_map[df_map['ヘルメット'] == helmet]))
+
+# ==========================================================
 
 # 地図の初期設定（初期表示位置を東京に設定）
 m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
@@ -97,8 +137,12 @@ fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
 fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
 fg_ib = folium.FeatureGroup(name='INNOBAND').add_to(m)
 
+if df_map.empty:
+    st.warning("選択された年月の範囲に該当する施設がありません。")
+
 # データフレームの各行を地図にプロット
-for index, row in df.iterrows():
+# for index, row in df.iterrows():
+for index, row in df_map.iterrows():    
     #<a href="https://www.ncchd.go.jp/" target="_blank" rel="noreferrer noopener">国立研究開発法人 国立成育医療研究ｾﾝﾀｰ</a>
     if row['URL'] != '':
         if row['ヘルメット'] in ['スターバンド調整', 'HANI Helmet', 'GIO Helmet', 'INNOBAND']:
