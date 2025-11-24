@@ -340,10 +340,19 @@ def build_map(df_map: pd.DataFrame) -> folium.Map:
 if df_map.empty:
     st.warning("選択された年月の範囲に該当する施設がありません。")
 else:
+    # ここで placeholder を用意しておく
     map_placeholder = st.empty()
-    m = build_map(df_map)
+
+    # 現在のスライダー設定での静止画マップ
+    m_initial = build_map(df_map)
     with map_placeholder:
-        st_folium(m, use_container_width=True, height=1000, returned_objects=[])
+        st_folium(
+            m_initial,
+            use_container_width=True,
+            height=1000,
+            returned_objects=[],
+            key="helmet_map_initial"  # ★ 固定の key
+        )
 
 st.markdown(
     '<div style="text-align: right; color:black; font-size:18px;">'
@@ -351,6 +360,7 @@ st.markdown(
     '</div>',
     unsafe_allow_html=True
 )
+
 
 # ================== アニメーション・GIF作成 ==================
 # スライダーから得た start_month, end_month, slider_max_ts, slider_min_ts を前のブロックで定義済みと仮定
@@ -400,7 +410,13 @@ if '年-月' in df.columns and not df_map.empty:
 
             m_frame = build_map(df_frame)
             with map_placeholder:
-                st_folium(m_frame, use_container_width=True, height=1000, returned_objects=[])
+                st_folium(
+                    m_frame,
+                    use_container_width=True,
+                    height=1000,
+                    returned_objects=[],
+                    key=f"helmet_map_anim_{i}"  # ← i を付けてユニークに
+                )
 
             time.sleep(0.7)  # コマ送りの間隔（秒）
 
