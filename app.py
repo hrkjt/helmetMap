@@ -262,18 +262,18 @@ def get_marker_color(name):
 def build_map(df_map: pd.DataFrame) -> folium.Map:
     # 地図の初期設定（初期表示位置を東京に設定）
     # m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
-    m = folium.Map(location=[35.6895, 139.6917], zoom_start=5)
+    m = folium.Map(location=[35.6895, 139.6917], zoom_start=5.5)
 
     # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
-    fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
-    fg_bb = folium.FeatureGroup(name='ベビーバンド').add_to(m)
-    fg_sb = folium.FeatureGroup(name='スターバンド').add_to(m)
-    fg_sba = folium.FeatureGroup(name='スターバンド調整').add_to(m)
-    fg_rb = folium.FeatureGroup(name='リモベビー').add_to(m)
-    fg_pm = folium.FeatureGroup(name='プロモメット').add_to(m)
-    fg_hh = folium.FeatureGroup(name='HANI Helmet').add_to(m)
-    fg_gh = folium.FeatureGroup(name='GIO Helmet').add_to(m)
-    fg_ib = folium.FeatureGroup(name='INNOBAND').add_to(m)
+    fg_q = folium.FeatureGroup(name='クルムフィット', show=True).add_to(m)
+    fg_bb = folium.FeatureGroup(name='ベビーバンド', show=True).add_to(m)
+    fg_sb = folium.FeatureGroup(name='スターバンド', show=True).add_to(m)
+    fg_sba = folium.FeatureGroup(name='スターバンド調整', show=True).add_to(m)
+    fg_rb = folium.FeatureGroup(name='リモベビー', show=True).add_to(m)
+    fg_pm = folium.FeatureGroup(name='プロモメット', show=True).add_to(m)
+    fg_hh = folium.FeatureGroup(name='HANI Helmet', show=False).add_to(m)
+    fg_gh = folium.FeatureGroup(name='GIO Helmet', show=False).add_to(m)
+    fg_ib = folium.FeatureGroup(name='INNOBAND', show=False).add_to(m)
 
     # データフレームの各行を地図にプロット
     for _, row in df_map.iterrows():
