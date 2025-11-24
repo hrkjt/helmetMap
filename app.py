@@ -54,6 +54,38 @@ for helmet in helmets:
   df_temp['ヘルメット'] = helmet
   df = pd.concat([df, df_temp])
 
+#st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
+# タイトルの中央揃え
+st.markdown('<div style="text-align: center; color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関等の地図</div>', unsafe_allow_html=True)
+
+# 同じ行に表示して中央揃え
+st.markdown(
+    f"""
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <span style="color:black; font-size:18px;">日本：</span>
+        <span style="color:#9C9E9E; font-size:18px;">クルムフィット {count['クルムフィット']} 施設　</span>
+        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
+        <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド {count['スターバンド']} 施設</span>
+        <span style="color:red; font-size:18px; margin-left: 10px;">（調整 {count['スターバンド調整']} 施設）　</span>
+        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー {count['リモベビー']} 施設　</span>
+        <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット {count['プロモメット']} 施設</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    f"""
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <span style="color:black; font-size:18px;">韓国：</span>
+        <span style="color:blue; font-size:18px; margin-left: 10px;">HANI Helmet {count['HANI Helmet']} 施設</span>
+        <span style="color:darkblue; font-size:18px; margin-left: 10px;">GIO Helmet {count['GIO Helmet']} 施設</span>
+        <span style="color:darkpurple; font-size:18px; margin-left: 10px;">INNOBAND {count['INNOBAND']} 施設</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 # 「年-月」列がある場合は datetime に変換してスライダーで絞り込み
 if '年-月' in df.columns:
     # 文字列 "YYYY-MM" → Timestamp（その月の1日）
@@ -91,7 +123,10 @@ if '年-月' in df.columns:
     end_month = pd.Timestamp(end_dt)
 
     # ★ 地図用の df を年月範囲でフィルタ
-    df_map = df[(df['年月'] >= start_month) & (df['年月'] <= end_month)].copy()
+    if slider_min_ts == default_start:
+        df_map = df[df['年月'] <= end_month].copy()
+    else:
+        df_map = df[(df['年月'] >= start_month) & (df['年月'] <= end_month)].copy()
 
 else:
     # 「年-月」が無い場合は全件表示
@@ -214,38 +249,6 @@ for index, row in df_map.iterrows():
 
 # レイヤーコントロールを地図に追加
 folium.LayerControl().add_to(m)
-
-#st.write('ヘルメットの種類ごとに色分けされた医療機関の地図')
-# タイトルの中央揃え
-st.markdown('<div style="text-align: center; color:black; font-size:24px; font-weight: bold;">ヘルメットの種類ごとに色分けされた医療機関等の地図</div>', unsafe_allow_html=True)
-
-# 同じ行に表示して中央揃え
-st.markdown(
-    f"""
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:black; font-size:18px;">日本：</span>
-        <span style="color:#9C9E9E; font-size:18px;">クルムフィット {count['クルムフィット']} 施設　</span>
-        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
-        <span style="color:#F49630; font-size:18px; margin-left: 10px;">スターバンド {count['スターバンド']} 施設</span>
-        <span style="color:red; font-size:18px; margin-left: 10px;">（調整 {count['スターバンド調整']} 施設）　</span>
-        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">リモベビー {count['リモベビー']} 施設　</span>
-        <span style="color:lightblue; font-size:18px; margin-left: 10px;">プロモメット {count['プロモメット']} 施設</span>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown(
-    f"""
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:black; font-size:18px;">韓国：</span>
-        <span style="color:blue; font-size:18px; margin-left: 10px;">HANI Helmet {count['HANI Helmet']} 施設</span>
-        <span style="color:darkblue; font-size:18px; margin-left: 10px;">GIO Helmet {count['GIO Helmet']} 施設</span>
-        <span style="color:darkpurple; font-size:18px; margin-left: 10px;">INNOBAND {count['INNOBAND']} 施設</span>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
 
 # 地図を表示
 st_folium(m, use_container_width=True, height=1000, returned_objects=[])
