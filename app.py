@@ -262,7 +262,7 @@ def get_marker_color(name):
 def build_map(df_map: pd.DataFrame) -> folium.Map:
     # 地図の初期設定（初期表示位置を東京に設定）
     # m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
-    m = folium.Map(location=[35.6895, 139.6917], zoom_start=5.5)
+    m = folium.Map(location=[35.6895, 139.6917], zoom_start=5.3)
 
     # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
     fg_q = folium.FeatureGroup(name='クルムフィット', show=True).add_to(m)
