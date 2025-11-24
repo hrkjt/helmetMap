@@ -62,24 +62,33 @@ if '年-月' in df.columns:
     # 下限は 2024-06-01、上限は「現在の月初」かデータ最大のどちらか小さい方
     default_start = pd.Timestamp('2024-06-01')
 
+    import datetime
     today = datetime.date.today()
     current_month = pd.Timestamp(today.replace(day=1))
 
     data_min = df['年月'].min()
     data_max = df['年月'].max()
 
-    # スライダーの範囲
-    slider_min = max(default_start, data_min) if pd.notna(data_min) else default_start
-    slider_max = min(current_month, data_max) if pd.notna(data_max) else current_month
+    # スライダーの範囲（pandas.Timestamp のまま一旦計算）
+    slider_min_ts = max(default_start, data_min) if pd.notna(data_min) else default_start
+    slider_max_ts = min(current_month, data_max) if pd.notna(data_max) else current_month
 
-    # 年月の範囲を選ぶスライダー
-    start_month, end_month = st.slider(
+    # ★ Streamlit に渡すときは Python の datetime に変換する
+    slider_min = slider_min_ts.to_pydatetime()
+    slider_max = slider_max_ts.to_pydatetime()
+
+    # 📌 ここがエラーになっていたので、min/max/value を全部 datetime に統一
+    start_dt, end_dt = st.slider(
         "表示する年月（年-月）",
         min_value=slider_min,
         max_value=slider_max,
         value=(slider_min, slider_max),
         format="YYYY-MM"
     )
+
+    # フィルタ用に pandas 側の Timestamp に戻してもいいし、そのまま比較でもOK
+    start_month = pd.Timestamp(start_dt)
+    end_month = pd.Timestamp(end_dt)
 
     # ★ 地図用の df を年月範囲でフィルタ
     df_map = df[(df['年月'] >= start_month) & (df['年月'] <= end_month)].copy()
@@ -421,7 +430,7 @@ df_border = (
 #     .properties(
 #         width=800,
 #         height=400,
-#         title='ヘルメット別 累積医療機関数（内訳を色分け・指定順でスタック）'
+#         title='ヘルメット別 累積医療機関数'  #（内訳を色分け・指定順でスタック）
 #     )
 # )
 
@@ -466,13 +475,13 @@ final_chart = (
     .properties(
         width=800,
         height=400,
-        title='ヘルメット別 累積医療機関数（内訳 + 境界黒線）'
+        title='ヘルメット別 累積医療機関数'  #（内訳 + 境界黒線）
     )
 )
 
 st.markdown(
     '<div style="text-align: center; color:black; font-size:22px; font-weight: bold; margin-top: 30px;">'
-    'ベビーバンド / スターバンド / クルムフィット / リモベビー の累積医療機関数（内訳付き）'
+    'ベビーバンド / スターバンド / クルムフィット / リモベビー の累積医療機関数'  #（内訳付き）
     '</div>',
     unsafe_allow_html=True
 )
