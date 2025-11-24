@@ -261,7 +261,8 @@ def get_marker_color(name):
 # ================== 地図描画関数 ==================
 def build_map(df_map: pd.DataFrame) -> folium.Map:
     # 地図の初期設定（初期表示位置を東京に設定）
-    m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
+    # m = folium.Map(location=[35.6895, 139.6917], zoom_start=6)
+    m = folium.Map(location=[35.6895, 139.6917], zoom_start=5)
 
     # レイヤーコントロールを使用して各都市のマーカーを別々のレイヤーに追加
     fg_q = folium.FeatureGroup(name='クルムフィット').add_to(m)
@@ -369,11 +370,13 @@ if '年-月' in df.columns and not df_map.empty:
 
     st.markdown("### 📽️ end_dt を1ヶ月ずつ増やしたアニメーション")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        play_anim = st.button("▶︎ 画面で再生")
-    with col2:
-        make_gif = st.button("💾 GIF を作成")
+    play_anim = st.button("▶︎ 画面で再生")
+
+    # col1, col2 = st.columns(2)
+    # with col1:
+    #     play_anim = st.button("▶︎ 画面で再生")
+    # with col2:
+    #     make_gif = st.button("💾 GIF を作成")
 
     # ユーザーが現在選んでいる start_dt に合わせて、end_dt を月ごとに右へ動かすイメージ
     start_ts = pd.Timestamp(start_dt)
@@ -421,39 +424,39 @@ if '年-月' in df.columns and not df_map.empty:
             time.sleep(0.7)  # コマ送りの間隔（秒）
 
         # --- GIF 作成＆ダウンロード ---
-    if make_gif:
-        frames = []
+    # if make_gif:
+    #     frames = []
 
-        for end_ts in anim_months:
-            df_frame = filter_df_for_range(end_ts)
-            if df_frame.empty:
-                continue
+    #     for end_ts in anim_months:
+    #         df_frame = filter_df_for_range(end_ts)
+    #         if df_frame.empty:
+    #             continue
 
-            # ★ GIF用は画面に描かない。folium.Map → PNG バイト列だけ使う
-            m_frame = build_map(df_frame)
+    #         # ★ GIF用は画面に描かない。folium.Map → PNG バイト列だけ使う
+    #         m_frame = build_map(df_frame)
 
-            try:
-                png_bytes = m_frame._to_png(5)  # delay は環境に応じて
-            except Exception as e:
-                st.error(f"folium の PNG 変換でエラーが出ました: {e}")
-                frames = []
-                break
+    #         try:
+    #             png_bytes = m_frame._to_png(5)  # delay は環境に応じて
+    #         except Exception as e:
+    #             st.error(f"folium の PNG 変換でエラーが出ました: {e}")
+    #             frames = []
+    #             break
 
-            frames.append(imageio.imread(io.BytesIO(png_bytes)))
+    #         frames.append(imageio.imread(io.BytesIO(png_bytes)))
 
-        if frames:
-            gif_bytes = io.BytesIO()
-            imageio.mimsave(gif_bytes, frames, format="GIF", duration=0.7)
-            gif_bytes.seek(0)
+    #     if frames:
+    #         gif_bytes = io.BytesIO()
+    #         imageio.mimsave(gif_bytes, frames, format="GIF", duration=0.7)
+    #         gif_bytes.seek(0)
 
-            st.download_button(
-                "GIF をダウンロード",
-                data=gif_bytes,
-                file_name="helmet_map_animation.gif",
-                mime="image/gif"
-            )
-        else:
-            st.warning("GIF 用のフレームを作成できませんでした。")
+    #         st.download_button(
+    #             "GIF をダウンロード",
+    #             data=gif_bytes,
+    #             file_name="helmet_map_animation.gif",
+    #             mime="image/gif"
+    #         )
+    #     else:
+    #         st.warning("GIF 用のフレームを作成できませんでした。")
 
 
 # ===== ここから折れ線グラフ用の処理 =====
