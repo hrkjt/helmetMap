@@ -420,7 +420,7 @@ if '年-月' in df.columns and not df_map.empty:
 
             time.sleep(0.7)  # コマ送りの間隔（秒）
 
-    # --- GIF 作成＆ダウンロード ---
+        # --- GIF 作成＆ダウンロード ---
     if make_gif:
         frames = []
 
@@ -429,12 +429,17 @@ if '年-月' in df.columns and not df_map.empty:
             if df_frame.empty:
                 continue
 
+            # ★ GIF用は画面に描かない。folium.Map → PNG バイト列だけ使う
             m_frame = build_map(df_frame)
 
-            # folium Map → PNG バイト列
-            png_bytes = m_frame._to_png(5)  # delay=5秒ぐらい（環境により調整）
-            img = imageio.imread(io.BytesIO(png_bytes))
-            frames.append(img)
+            try:
+                png_bytes = m_frame._to_png(5)  # delay は環境に応じて
+            except Exception as e:
+                st.error(f"folium の PNG 変換でエラーが出ました: {e}")
+                frames = []
+                break
+
+            frames.append(imageio.imread(io.BytesIO(png_bytes)))
 
         if frames:
             gif_bytes = io.BytesIO()
