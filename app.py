@@ -98,62 +98,28 @@ st.markdown(
 
 # 日本
 st.markdown(
-    f"""
-    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
-        <span style="color:black; font-size:18px;">日本：</span>
-
-        <span style="color:#9C9E9E; font-size:18px;">
-            クルムフィット {count['クルムフィット']} 施設　
-        </span>
-
-        <span style="color:#FF8CE8; font-size:18px; margin-left: 10px;">
-            ベビーバンド {count['ベビーバンド']} 施設　
-        </span>
-
-        <span style="color:#F49630; font-size:18px; margin-left: 10px;">
-            スターバンド {count['スターバンド']} 施設
-        </span>
-
-        <span style="color:red; font-size:18px; margin-left: 10px;">
-            （調整 {count['スターバンド調整']} 施設）　
-        </span>
-
-        <span style="color:#FFC88D; font-size:18px; margin-left: 10px;">
-            リモベビー {count['リモベビー']} 施設　
-        </span>
-
-        <span style="color:lightblue; font-size:18px; margin-left: 10px;">
-            プロモメット {count['プロモメット']} 施設　
-        </span>
-
-        <span style="color:#2E8B57; font-size:18px; margin-left: 10px;">
-            ココバンド {count['ココバンド']} 施設
-        </span>
-    </div>
-    """,
+    f"""<div style="display:flex; justify-content:center; align-items:center; flex-wrap:wrap;">
+<span style="color:black; font-size:18px;">日本：</span>
+<span style="color:#9C9E9E; font-size:18px;">クルムフィット {count['クルムフィット']} 施設　</span>
+<span style="color:#FF8CE8; font-size:18px; margin-left:10px;">ベビーバンド {count['ベビーバンド']} 施設　</span>
+<span style="color:#F49630; font-size:18px; margin-left:10px;">スターバンド {count['スターバンド']} 施設</span>
+<span style="color:red; font-size:18px; margin-left:10px;">（調整 {count['スターバンド調整']} 施設）　</span>
+<span style="color:#FFC88D; font-size:18px; margin-left:10px;">リモベビー {count['リモベビー']} 施設　</span>
+<span style="color:lightblue; font-size:18px; margin-left:10px;">プロモメット {count['プロモメット']} 施設　</span>
+<span style="color:#2E8B57; font-size:18px; margin-left:10px;">ココバンド {count['ココバンド']} 施設</span>
+</div>""",
     unsafe_allow_html=True
 )
 
 
 # 韓国
 st.markdown(
-    f"""
-    <div style="display: flex; justify-content: center; align-items: center;">
-        <span style="color:black; font-size:18px;">韓国：</span>
-
-        <span style="color:blue; font-size:18px; margin-left: 10px;">
-            HANI Helmet {count['HANI Helmet']} 施設
-        </span>
-
-        <span style="color:darkblue; font-size:18px; margin-left: 10px;">
-            GIO Helmet {count['GIO Helmet']} 施設
-        </span>
-
-        <span style="color:darkpurple; font-size:18px; margin-left: 10px;">
-            INNOBAND {count['INNOBAND']} 施設
-        </span>
-    </div>
-    """,
+    f"""<div style="display:flex; justify-content:center; align-items:center; flex-wrap:wrap;">
+<span style="color:black; font-size:18px;">韓国：</span>
+<span style="color:blue; font-size:18px; margin-left:10px;">HANI Helmet {count['HANI Helmet']} 施設</span>
+<span style="color:darkblue; font-size:18px; margin-left:10px;">GIO Helmet {count['GIO Helmet']} 施設</span>
+<span style="color:darkpurple; font-size:18px; margin-left:10px;">INNOBAND {count['INNOBAND']} 施設</span>
+</div>""",
     unsafe_allow_html=True
 )
 
